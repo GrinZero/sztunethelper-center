@@ -1,3 +1,3 @@
-export const secretID = 'xxx'
-export const secretKey = 'xxx'
-export const mysqlSecret = 'xxx'
+export const secretID = 'xxxx'
+export const secretKey = 'xxxx'
+export const mysqlSecret = 'xxxx'
