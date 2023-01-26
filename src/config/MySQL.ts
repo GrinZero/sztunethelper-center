@@ -1,4 +1,4 @@
-import { mysqlSecret } from '../env'
+import { mysqlSecret } from '../env.prod'
 
 const MYSQL = {
   DB_NAME: 'nethelper',

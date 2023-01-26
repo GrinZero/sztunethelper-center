@@ -2,8 +2,8 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 
-ipath="env.ts"
-git diff --cached --name-only | if grep -qE "^$ipath$";then
+ipath="env.prod.ts"
+git diff --cached --name-only | if grep -qE "$ipath$";then
     git reset HEAD -- "$ipath"
     echo "Warn: $ipath is removed from the index. It's not allowed to be committed."
 fi
