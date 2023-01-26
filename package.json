@@ -1,0 +1,39 @@
+{
+  "name": "sztunethelper-center",
+  "version": "0.0.1",
+  "description": "the koa center for sztunethelper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && NODE_ENV=production node ./lib/index.js",
+    "dev": "nodemon --exec NODE_OPTIONS=--inspect NODE_ENV=development ts-node --files ./src/index.ts",
+    "docker:start": "sh ./service/start.sh"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.0",
+    "koa": "^2.14.1",
+    "koa-body": "^6.0.1",
+    "koa-jwt": "^4.0.4",
+    "koa-router": "^12.0.0",
+    "moment": "^2.29.4",
+    "mysql": "^2.18.1",
+    "tencentcloud-sdk-nodejs": "^4.0.526"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.1",
+    "@types/koa": "^2.13.5",
+    "@types/koa-router": "^7.4.4",
+    "@types/mysql": "^2.15.21",
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^5.48.2",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.32.0",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.3",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.4.1",
+    "typescript": "^4.9.4"
+  }
+}

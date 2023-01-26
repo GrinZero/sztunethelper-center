@@ -1,0 +1,1 @@
+docker image build  -t sztunethelper:0.0.1 .
