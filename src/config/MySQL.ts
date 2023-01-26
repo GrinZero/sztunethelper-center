@@ -1,9 +1,11 @@
+import { mysqlSecret } from '../env'
+
 const MYSQL = {
   DB_NAME: 'nethelper',
   HOST: '127.0.0.1',
   PORT: 3306,
   USER_NAME: 'root',
-  PASSWORD: 'root',
+  PASSWORD: mysqlSecret,
   CONNECTION_LIMIT: 60 * 60 * 1000,
   CONNECT_TIMEOUT: 1000 * 60 * 60 * 1000,
   ACQUIRE_TIMEOUT: 60 * 60 * 1000,

@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc && NODE_ENV=production node ./lib/index.js",
     "dev": "nodemon --exec NODE_OPTIONS=--inspect NODE_ENV=development ts-node --files ./src/index.ts",
-    "docker:start": "sh ./service/start.sh"
+    "docker:start": "sh ./service/start.sh",
+    "prepare": "husky install"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "tencentcloud-sdk-nodejs": "^4.0.526"
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^17.4.2",
     "@types/jsonwebtoken": "^9.0.1",
     "@types/koa": "^2.13.5",
     "@types/koa-router": "^7.4.4",
@@ -29,11 +31,22 @@
     "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.48.2",
     "@typescript-eslint/parser": "^5.0.0",
+    "commitlint": "^17.4.2",
     "eslint": "^8.32.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.3",
     "ts-node": "^10.9.1",
     "tslib": "^2.4.1",
     "typescript": "^4.9.4"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "node --max_old_space_size=8192 ./node_modules/eslint/bin/eslint.js --fix --color --cache --quiet"
+    ],
+    "*.{js,jsx,mjs,mjsx,cjs,cjsx}": [
+      "node --max_old_space_size=8192 ./node_modules/eslint/bin/eslint.js --fix --color --cache --quiet"
+    ]
   }
 }
