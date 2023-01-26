@@ -11,7 +11,6 @@ const MYSQL = {
   ACQUIRE_TIMEOUT: 60 * 60 * 1000,
   TIMEOUT: 1000 * 60 * 60 * 1000
 }
-
 const config = {
   host: MYSQL.HOST,
   port: MYSQL.PORT,
