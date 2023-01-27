@@ -4,7 +4,6 @@
 CREATE TABLE `nethelper`.`user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
   `mail` VARCHAR(45) NOT NULL,
   `nickName` VARCHAR(45) NOT NULL,
   `avatar` TEXT NULL,
@@ -12,8 +11,21 @@ CREATE TABLE `nethelper`.`user` (
   `createTime` BIGINT(20) NULL DEFAULT 1597618819100,
   `updateTime` BIGINT(20) NULL DEFAULT 1597618819100,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE,
-  INDEX `login` (`username` ASC, `password` ASC) VISIBLE
+  UNIQUE INDEX `mail_UNIQUE` (`mail` ASC) VISIBLE
+);
+
+
+-- ----------------------------
+-- Table structure for mail_verify_code
+-- ----------------------------
+CREATE TABLE `nethelper`.`mail_verify_code` (
+  `mail` VARCHAR(45) NOT NULL,
+  `code` VARCHAR(8) NULL,
+  `count` INT NULL DEFAULT 3,
+  `createTime` BIGINT(20) NULL DEFAULT 1597618819100,
+  `updateTime` BIGINT(20) NULL DEFAULT 1597618819100,
+  PRIMARY KEY (`mail`),
+  UNIQUE INDEX `id_UNIQUE` (`mail` ASC) VISIBLE
 );
 
 
@@ -30,8 +42,8 @@ CREATE TABLE `nethelper`.`ticket` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `from` (`from` ASC) VISIBLE,
-  INDEX `toID` (`toID` ASC) VISIBLE);
-
+  INDEX `toID` (`toID` ASC) VISIBLE
+);
 
 -- ----------------------------
 -- Table structure for ticket_content
@@ -46,14 +58,15 @@ CREATE TABLE `nethelper`.`ticket_content` (
   `updateTime` BIGINT(20) NULL DEFAULT 1597618819100,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `ticketID` (`ticketID` ASC) VISIBLE);
+  INDEX `ticketID` (`ticketID` ASC) VISIBLE
+);
 
 
 -- ----------------------------
 -- Records of base
 -- ----------------------------
 BEGIN;
-INSERT INTO `nethelper`.`user` VALUES (1, 'admin', 'root','bugyaluwang@qq.com','源心锁', 'https://s.gravatar.com/avatar/d8065bea49aa2877ce13686772727711?s=80', 'Hello World', 1582595976253, 1582595976253);
+INSERT INTO `nethelper`.`user` VALUES (1, 'admin','bugyaluwang@qq.com','源心锁', 'https://s.gravatar.com/avatar/d8065bea49aa2877ce13686772727711?s=80', 'Hello World', 1582595976253, 1582595976253);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
