@@ -1,8 +1,8 @@
-import tencentcloud from 'tencentcloud-sdk-nodejs'
+import { ses } from 'tencentcloud-sdk-nodejs'
 
 import { secretID, secretKey } from '../../env.prod'
 
-const SesClient = tencentcloud.ses.v20201002.Client
+const SesClient = ses.v20201002.Client
 const clientConfig = {
   credential: {
     secretId: secretID,

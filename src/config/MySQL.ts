@@ -7,9 +7,9 @@ const MYSQL = {
   USER_NAME: 'root',
   PASSWORD: mysqlSecret,
   CONNECTION_LIMIT: 60 * 60 * 1000,
-  CONNECT_TIMEOUT: 1000 * 60 * 60 * 1000,
+  CONNECT_TIMEOUT: 1000 * 60 * 60,
   ACQUIRE_TIMEOUT: 60 * 60 * 1000,
-  TIMEOUT: 1000 * 60 * 60 * 1000
+  TIMEOUT: 1000 * 60 * 60
 }
 const config = {
   host: MYSQL.HOST,

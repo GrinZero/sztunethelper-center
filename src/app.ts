@@ -11,7 +11,7 @@ app.use(async (ctx, next) => {
   ctx.set('Access-Control-Allow-Origin', '*')
   ctx.set(
     'Access-Control-Allow-Headers',
-    'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild'
+    'Content-Type, Content-Length, Authorization, Accept, X-Requested-With'
   )
   ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
   if (ctx.method == 'OPTIONS') {
@@ -24,9 +24,6 @@ app.use(async (ctx, next) => {
 import { publicRouter } from './routes/public'
 import { apiRouter } from './routes/api'
 
-app.use(publicRouter.routes()).use(publicRouter.allowedMethods())
-app.use(apiRouter.routes()).use(apiRouter.allowedMethods())
-
 app.use(
   jwt({
     secret: JwtConfig.secret,
@@ -35,5 +32,8 @@ app.use(
     path: [/^\/public/]
   })
 )
+
+app.use(publicRouter.routes()).use(publicRouter.allowedMethods())
+app.use(apiRouter.routes()).use(apiRouter.allowedMethods())
 
 export { app }
