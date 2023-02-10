@@ -8,6 +8,7 @@
     "start": "tsc && NODE_ENV=production node ./lib/index.js",
     "dev": "nodemon --exec NODE_OPTIONS=--inspect NODE_ENV=development ts-node --files ./src/index.ts",
     "docker:start": "sh ./service/start.sh",
+    "docker:build": "sh ./service/build.sh",
     "prepare": "husky install"
   },
   "author": "",

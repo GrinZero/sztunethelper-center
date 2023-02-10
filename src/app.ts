@@ -6,6 +6,16 @@ import { JwtConfig } from './config'
 
 const app = new Koa()
 
+app.use(async (ctx, next) => {
+  try {
+    await next()
+  } catch (err: any) {
+    ctx.status = err?.status || 500
+    ctx.body = err?.message
+    ctx.app.emit('error', err, ctx)
+  }
+})
+
 app.use(koaBody())
 app.use(async (ctx, next) => {
   ctx.set('Access-Control-Allow-Origin', '*')

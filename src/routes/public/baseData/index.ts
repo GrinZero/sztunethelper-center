@@ -38,7 +38,7 @@ publicRouter
       name: '蔡小宝',
       avatarUrl: 'https://img.atobo.com/ProductImg/EWM/UWeb/1/9/4/0/0447/19400447/1.gif',
       desc: '我是张三，我是一个好人',
-      contact: '123456789',
+      contact: 'Phone: 17603095310',
       rate: 4.5
     }
     ctx.body = {
