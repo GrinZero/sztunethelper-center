@@ -21,7 +21,9 @@
     "koa-router": "^12.0.0",
     "moment": "^2.29.4",
     "mysql": "^2.18.1",
-    "tencentcloud-sdk-nodejs": "^4.0.526"
+    "socket.io": "^4.6.0",
+    "tencentcloud-sdk-nodejs": "^4.0.526",
+    "tsconfig-paths": "^4.1.2"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.4.2",
@@ -49,5 +51,17 @@
     "*.{js,jsx,mjs,mjsx,cjs,cjsx}": [
       "node --max_old_space_size=8192 ./node_modules/eslint/bin/eslint.js --fix --color --cache --quiet"
     ]
+  },
+  "imports": {
+    "#/*": "./src/*",
+    "#service/*": "./src/service/*",
+    "#routes/*": "./src/routes/*",
+    "#config/*": "./src/config/*",
+    "#common/*": "./src/common/*",
+    "#core/*": "./src/core/*"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.7",
+    "utf-8-validate": "^5.0.2"
   }
 }

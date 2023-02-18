@@ -1,8 +1,8 @@
 import { publicRouter } from './index'
 
-import { JwtConfig } from '../../config'
-import { command } from '../../service/mysql'
-import client from '../../service/mail'
+import { JwtConfig } from '#config/index'
+import { command } from '#service/mysql'
+import client from '#service/mail'
 import { sign } from 'jsonwebtoken'
 
 publicRouter.post('/auth', async (ctx, _) => {

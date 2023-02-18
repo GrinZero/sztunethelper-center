@@ -2,9 +2,9 @@
 import pool from './pool'
 import mysql from 'mysql'
 
-import { Models } from '../../common/types/model'
-import { lineToHumpObject } from '../../common/utils'
-import { DataBaseFailed } from '../../core/HttpException'
+import { Models } from '#common/types/model'
+import { lineToHumpObject } from '#common/utils'
+import { DataBaseFailed } from '#core/HttpException'
 
 /*
  * 数据库增删改查
@@ -57,4 +57,22 @@ export async function command(command: string, value?: Array<any>): Promise<Mode
   } catch {
     throw new DataBaseFailed()
   }
+}
+
+interface InsertProps {
+  table: string
+  data: Record<string, string | number>
+}
+export function insert({ table, data }: InsertProps) {
+  const keys = Object.keys(data)
+  const values = Object.values(data)
+  const command = `INSERT INTO ${table} (${keys.map((k) => `\`${k}\``).join(',')}) VALUES (${values
+    .map((v) => (typeof v === 'string' ? `'${v}'` : v))
+    .join(',')})`
+
+  return command
+}
+
+export default {
+  command
 }

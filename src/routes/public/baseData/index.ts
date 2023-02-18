@@ -8,12 +8,13 @@ interface Banner {
 }
 
 interface Duty {
-  id: string
+  id: number
   name: string
   avatarUrl: string
   desc: string
   contact: string
   rate: number | null
+  contactType: 'socket' | 'mail' | 'image' | 'other'
 }
 
 publicRouter
@@ -34,12 +35,13 @@ publicRouter
   })
   .get('/getDuty', async (ctx, _) => {
     const currentDuty: Duty = {
-      id: '1',
-      name: '蔡小宝',
+      id: 2,
+      name: '源心锁',
       avatarUrl: 'https://img.atobo.com/ProductImg/EWM/UWeb/1/9/4/0/0447/19400447/1.gif',
-      desc: '我是张三，我是一个好人',
+      desc: '我是源心锁，2019级大数据学院学生',
       contact: 'Phone: 17603095310',
-      rate: 4.5
+      rate: 4.5,
+      contactType: 'mail'
     }
     ctx.body = {
       data: currentDuty,

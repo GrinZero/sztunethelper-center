@@ -18,11 +18,19 @@
     "types": ["node"],
     "declaration": true,
     "declarationDir": "./lib/types",
-    "lib": ["ESNext", "WebWorker", "scripthost"]
+    "lib": ["ESNext", "WebWorker", "scripthost"],
+    "paths": {
+      "#/*": ["./src/*"],
+      "#service/*": ["./src/service/*"],
+      "#routes/*": ["./src/routes/*"],
+      "#config/*": ["./src/config/*"],
+      "#common/*": ["./src/common/*"],
+      "#core/*": ["./src/core/*"]
+    }
   },
   "exclude": ["node_modules"],
   "include": ["./src/**/*.js", "./src/**/*.ts", "./*.ts", "src/types/*.d.ts"],
-  "paths": {
-    "@/*": ["./src/*"]
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
   }
 }

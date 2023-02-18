@@ -3,9 +3,12 @@ import jwt from 'koa-jwt'
 import koaBody from 'koa-body'
 
 import { JwtConfig } from './config'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
 
 const app = new Koa()
 
+//HTTP
 app.use(async (ctx, next) => {
   try {
     await next()
@@ -15,7 +18,6 @@ app.use(async (ctx, next) => {
     ctx.app.emit('error', err, ctx)
   }
 })
-
 app.use(koaBody())
 app.use(async (ctx, next) => {
   ctx.set('Access-Control-Allow-Origin', '*')
@@ -46,4 +48,20 @@ app.use(
 app.use(publicRouter.routes()).use(publicRouter.allowedMethods())
 app.use(apiRouter.routes()).use(apiRouter.allowedMethods())
 
-export { app }
+//SOCKET
+
+const httpServer = createServer(app.callback())
+const io = new Server(httpServer, {
+  cors: {
+    origin: '*'
+  }
+})
+
+io.on('connection', (socket) => {
+  console.log('a user connected')
+  socket.on('disconnect', () => {
+    console.log('user disconnected')
+  })
+})
+
+export { app, httpServer }
