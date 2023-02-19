@@ -1,6 +1,6 @@
 import { apiRouter } from '..'
 
-import { command, insert } from '#service/mysql'
+import { control, Command } from '#service/mysql'
 
 const typeList = ['网络问题']
 const contactTypeList = ['socket', 'mail', 'image', 'other']
@@ -17,7 +17,7 @@ apiRouter.post('/addTicket', async (ctx, _) => {
     return
   }
 
-  const { results: toResult } = await command(`
+  const { results: toResult } = await control(`
         SELECT mail,username FROM user
         WHERE id = ${toID} and type > 0
       `)
@@ -31,9 +31,8 @@ apiRouter.post('/addTicket', async (ctx, _) => {
   const contactTypeValue = contactTypeList.indexOf(contactType)
 
   const stamp = Date.now()
-  const control = insert({
-    table: 'ticket',
-    data: {
+  const command = new Command('ticket')
+    .insert({
       from: mail,
       to: toResult[0].mail,
       type,
@@ -42,10 +41,10 @@ apiRouter.post('/addTicket', async (ctx, _) => {
       createTime: stamp,
       updateTime: stamp,
       read: 0b10
-    }
-  })
+    })
+    .done()
 
-  const result = await command(control)
+  const result = await control(command)
   const { insertId } = result.results
   ctx.body = {
     msg: 'ok',
@@ -62,16 +61,15 @@ apiRouter.post('/addTicket', async (ctx, _) => {
     state: 1
   }
 
-  const ticketContentControl = insert({
-    table: 'ticket_content',
-    data: {
+  const ticketContentControl = new Command('ticket_content')
+    .insert({
       ticketID: insertId,
       content,
       createTime: stamp,
       updateTime: stamp,
       type: 0
-    }
-  })
+    })
+    .done()
 
-  await command(ticketContentControl)
+  await control(ticketContentControl)
 })

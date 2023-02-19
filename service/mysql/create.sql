@@ -57,8 +57,9 @@ CREATE TABLE `nethelper`.`ticket` (
 CREATE TABLE `nethelper`.`ticket_content` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `ticketID` INT NOT NULL,
+  `sender` VARCHAR(45) NOT NULL,
   `content` TEXT NULL,
-  `type` INT NULL DEFAULT 0, -- 0: text 1: image 2: other
+  `type` INT NULL DEFAULT 0, -- 0: text 1: image 2: file
   `status` INT NULL DEFAULT 0,
   `createTime` BIGINT(20) NULL DEFAULT 1597618819100,
   `updateTime` BIGINT(20) NULL DEFAULT 1597618819100,

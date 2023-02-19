@@ -1,6 +1,6 @@
 import { apiRouter } from '..'
 
-import { command } from '#service/mysql'
+import { control, Command, condition } from '#service/mysql'
 
 apiRouter.post('/fetchTicketList', async (ctx, _) => {
   const { mail } = ctx.state.user
@@ -9,15 +9,28 @@ apiRouter.post('/fetchTicketList', async (ctx, _) => {
   const offset = page * pageSize
 
   // 0: open 1: close 2: delete
-  const control = `
-      SELECT \`ticket\`.*,\`user\`.username as adminName FROM ticket,user
-      WHERE \`from\` = '${mail}' and status != 2 and \`ticket\`.to = \`user\`.mail
-      ORDER BY createTime DESC
-      LIMIT ${pageSize}
-      OFFSET ${offset}
-    `
+  const command = new Command()
+    .select({
+      ticket: {
+        '*': 1
+      },
+      user: {
+        username: 'adminName'
+      }
+    })
+    .where({
+      from: mail,
+      status: condition('!=', 2),
+      ticket: {
+        to: '`user`.`mail`'
+      }
+    })
+    .orderBy({ createTime: -1 })
+    .limit(pageSize)
+    .offset(offset)
+    .done()
 
-  const { results: list } = await command(control)
+  const { results: list } = await control(command)
   ctx.body = list.map((item: any) => {
     return {
       ...item,
@@ -25,3 +38,10 @@ apiRouter.post('/fetchTicketList', async (ctx, _) => {
     }
   })
 })
+
+// apiRouter.post('/fetchTicketInfos', async (ctx, _) => {
+//   const { mail } = ctx.state.user
+//   const { page } = ctx.request.body
+//   const pageSize = 10
+//   const offset = page * pageSize
+// })

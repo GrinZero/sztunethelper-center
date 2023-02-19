@@ -1,6 +1,6 @@
 import { apiRouter } from '..'
 
-import { command } from '#service/mysql'
+import { control } from '#service/mysql'
 
 apiRouter
   .post('/closeTicket', async (ctx, _) => {
@@ -8,13 +8,13 @@ apiRouter
     const { id } = ctx.request.body
 
     const CLOSE_STATUS = 1
-    const control = `
+    const command = `
     UPDATE ticket 
     SET status = ${CLOSE_STATUS}
     WHERE \`from\` = '${mail}' and id = ${id}
   `
 
-    await command(control)
+    await control(command)
     ctx.body = {
       msg: 'ok',
       state: 1
@@ -25,13 +25,13 @@ apiRouter
     const { id } = ctx.request.body
 
     const DELETE_STATUS = 2
-    const control = `
+    const command = `
     UPDATE ticket 
     SET status = ${DELETE_STATUS}
     WHERE \`from\` = '${mail}' and id = ${id}
   `
 
-    await command(control)
+    await control(command)
     ctx.body = {
       msg: 'ok',
       state: 1

@@ -1,12 +1,15 @@
 import Koa from 'koa'
 import jwt from 'koa-jwt'
 import koaBody from 'koa-body'
+import helmet from 'koa-helmet'
+import { verify } from 'jsonwebtoken'
 
 import { JwtConfig } from './config'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 
 const app = new Koa()
+app.use(helmet())
 
 //HTTP
 app.use(async (ctx, next) => {
@@ -49,18 +52,50 @@ app.use(publicRouter.routes()).use(publicRouter.allowedMethods())
 app.use(apiRouter.routes()).use(apiRouter.allowedMethods())
 
 //SOCKET
-
+import type {
+  ServerToClientEvents,
+  ClientToServerEvents,
+  InterServerEvents,
+  SocketData,
+  UserState
+} from '#routes/index'
 const httpServer = createServer(app.callback())
-const io = new Server(httpServer, {
-  cors: {
-    origin: '*'
+const io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(
+  httpServer,
+  {
+    cors: {
+      origin: '*'
+    }
   }
-})
+)
 
+import { join, send } from './routes'
 io.on('connection', (socket) => {
-  console.log('a user connected')
+  let user: null | UserState = null
+  try {
+    const token = socket.handshake.auth.token.replace('Bearer ', '')
+    user = verify(token, JwtConfig.secret) as UserState
+  } catch (err: any) {
+    socket.disconnect()
+    console.info('a user disconnected:', socket.id, err.name)
+    switch (err.name) {
+      case 'TokenExpiredError':
+        // ctx.app.emit('error', tokenExpiredError, ctx)
+        throw new Error('token已过期')
+      case 'JsonWebTokenError':
+        throw new Error('无效的token')
+      default:
+        throw new Error('Authorization Error')
+    }
+  }
+
+  console.info('a user connected:', socket.id, user)
+
+  join(socket, user)
+  send(socket, user)
+
   socket.on('disconnect', () => {
-    console.log('user disconnected')
+    console.info('user disconnected', socket.id)
   })
 })
 

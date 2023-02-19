@@ -11,7 +11,7 @@ import { DataBaseFailed } from '#core/HttpException'
  * @param command 增删改查语句
  * @param value 对应的值
  */
-export async function command(command: string, value?: Array<any>): Promise<Models.Result> {
+export async function control(command: string, value?: Array<any>): Promise<Models.Result> {
   try {
     return new Promise<Models.Result>((resolve, reject: (error: Models.MysqlError) => void) => {
       pool.getConnection((error: mysql.MysqlError, connection: mysql.PoolConnection) => {
@@ -59,20 +59,8 @@ export async function command(command: string, value?: Array<any>): Promise<Mode
   }
 }
 
-interface InsertProps {
-  table: string
-  data: Record<string, string | number>
-}
-export function insert({ table, data }: InsertProps) {
-  const keys = Object.keys(data)
-  const values = Object.values(data)
-  const command = `INSERT INTO ${table} (${keys.map((k) => `\`${k}\``).join(',')}) VALUES (${values
-    .map((v) => (typeof v === 'string' ? `'${v}'` : v))
-    .join(',')})`
-
-  return command
-}
+export * from './command'
 
 export default {
-  command
+  control
 }

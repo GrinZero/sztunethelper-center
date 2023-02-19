@@ -1,7 +1,7 @@
 import { publicRouter } from './index'
 
 import { JwtConfig } from '#config/index'
-import { command } from '#service/mysql'
+import { control } from '#service/mysql'
 import client from '#service/mail'
 import { sign } from 'jsonwebtoken'
 
@@ -9,7 +9,7 @@ publicRouter.post('/auth', async (ctx, _) => {
   const { mail, code } = ctx.request.body
   const verfiy = async () => {
     // 5min有效
-    const { results } = await command(
+    const { results } = await control(
       `select mail from mail_verify_code where mail = '${mail}' and code = '${code}' and updateTime > ${
         Date.now() - 5 * 60 * 1000
       }`
@@ -20,7 +20,7 @@ publicRouter.post('/auth', async (ctx, _) => {
     return false
   }
 
-  const { results: haveNameResult } = await command(`select id from user where mail = '${mail}'`)
+  const { results: haveNameResult } = await control(`select id from user where mail = '${mail}'`)
   const haveUser = haveNameResult.length === 1
   const verifyResult = await verfiy()
 
@@ -28,13 +28,13 @@ publicRouter.post('/auth', async (ctx, _) => {
     const token = sign({ mail, id: haveNameResult[0].id }, JwtConfig.secret, {
       expiresIn: '120d'
     })
-    await command(`update user set updateTime = '${new Date().getTime()}' where mail = '${mail}'`)
+    await control(`update user set updateTime = '${new Date().getTime()}' where mail = '${mail}'`)
     ctx.body = { token }
     return
   }
 
   if (verifyResult && !haveUser) {
-    const { results: registerResult } = await command(
+    const { results: registerResult } = await control(
       `insert into user (username,mail,nickName,createTime,updateTime) values ('${mail}','${mail}','${mail}',${Date.now()},${Date.now()})`
     )
     if (registerResult.affectedRows === 1) {
@@ -79,12 +79,12 @@ publicRouter.post('/sendVerifyCode', async (ctx, _) => {
     })
   }
 
-  let { results } = await command(
+  let { results } = await control(
     `select updateTime,count from mail_verify_code where mail = '${mail}'`
   )
 
   if (results.length === 0) {
-    await command(
+    await control(
       `insert into mail_verify_code (mail,code,createTime,updateTime) values ('${mail}','${code}',${Date.now()},${Date.now()})`
     )
     await sendVerifyCodeMail()
@@ -98,7 +98,7 @@ publicRouter.post('/sendVerifyCode', async (ctx, _) => {
     const { updateTime } = results[0]
     const oneDay = 24 * 60 * 60 * 1000
     if (Date.now() - updateTime > oneDay) {
-      await command(
+      await control(
         `update mail_verify_code set code = '${code}',updateTime = ${Date.now()},count = 3 where mail = '${mail}'`
       )
       await sendVerifyCodeMail()
@@ -112,7 +112,7 @@ publicRouter.post('/sendVerifyCode', async (ctx, _) => {
   }
 
   results = (
-    await command(
+    await control(
       `select updateTime,count from mail_verify_code where mail = '${mail}' and count > 0`
     )
   ).results
@@ -125,7 +125,7 @@ publicRouter.post('/sendVerifyCode', async (ctx, _) => {
     return
   }
 
-  await command(
+  await control(
     `update mail_verify_code set code = '${code}',updateTime = ${Date.now()},count = count - 1 where mail = '${mail}'`
   )
   await sendVerifyCodeMail()

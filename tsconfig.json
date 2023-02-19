@@ -29,7 +29,7 @@
     }
   },
   "exclude": ["node_modules"],
-  "include": ["./src/**/*.js", "./src/**/*.ts", "./*.ts", "src/types/*.d.ts"],
+  "include": ["./src/**/*.js", "./src/**/*.ts", "./*.ts", "src/types/*.d.ts", "tests/**/*.ts"],
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   }

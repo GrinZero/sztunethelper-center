@@ -4,7 +4,7 @@
   "description": "the koa center for sztunethelper",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
     "start": "tsc && NODE_ENV=production node ./lib/index.js",
     "dev": "nodemon --exec NODE_OPTIONS=--inspect NODE_ENV=development ts-node --files ./src/index.ts",
     "docker:start": "sh ./service/start.sh",
@@ -17,6 +17,7 @@
     "jsonwebtoken": "^9.0.0",
     "koa": "^2.14.1",
     "koa-body": "^6.0.1",
+    "koa-helmet": "^6.1.0",
     "koa-jwt": "^4.0.4",
     "koa-router": "^12.0.0",
     "moment": "^2.29.4",
@@ -42,7 +43,8 @@
     "prettier": "^2.8.3",
     "ts-node": "^10.9.1",
     "tslib": "^2.4.1",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "vitest": "^0.28.5"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
