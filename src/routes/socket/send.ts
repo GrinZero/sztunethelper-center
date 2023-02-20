@@ -50,7 +50,9 @@ const send = (socket: SocketInstance, users: any) => {
 
     const data = {
       ...insertData,
-      id: insertResult.results.insertId
+      id: insertResult.results.insertId,
+      type: msg.type,
+      localID: msg.id
     }
     callback?.({
       status: 'ok',

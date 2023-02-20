@@ -5,16 +5,11 @@ export interface SocketData {
   data: any
 }
 
-export enum ServerTicketType {
-  text = 0,
-  image = 1,
-  file = 2
-}
 export interface ServerTicket {
   id: number
   ticketID: string | number
   content: string
-  type: ServerTicketType
+  type: 'text' | 'image' | 'file'
   status: number
   createTime: number
   updateTime: number
@@ -29,6 +24,8 @@ export interface ServerToClientEvents {
 export interface TicketMessage {
   type: 'text' | 'image' | 'file'
   data: string
+  time?: number
+  id?: string | number
 }
 
 export interface SocketMessage {
