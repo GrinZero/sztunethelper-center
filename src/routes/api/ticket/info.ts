@@ -1,4 +1,5 @@
 import { apiRouter } from '..'
+import { TicketContentTypeList } from './constants'
 
 import { control, Command, condition } from '#service/mysql'
 
@@ -88,5 +89,10 @@ apiRouter.post('/fetchTicketInfos', async (ctx, _) => {
 
   const { results: list } = await control(command)
 
-  ctx.body = list
+  ctx.body = list.map((item: any) => {
+    return {
+      ...item,
+      type: TicketContentTypeList[item.type]
+    }
+  })
 })

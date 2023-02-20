@@ -1,5 +1,6 @@
 import { SocketInstance } from './type'
 import { control, Command } from '#/service/mysql'
+import { TicketContentTypeList } from '#/routes/api/ticket/constants'
 
 const send = (socket: SocketInstance, users: any) => {
   socket.on('send', async (roomID, msg, callback) => {
@@ -26,7 +27,7 @@ const send = (socket: SocketInstance, users: any) => {
       return
     }
 
-    const typeList = ['text', 'image', 'file']
+    const typeList = TicketContentTypeList
     if (!typeList.includes(msg.type)) {
       callback?.({
         status: 'error',
