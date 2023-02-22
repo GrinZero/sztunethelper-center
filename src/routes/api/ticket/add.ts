@@ -6,8 +6,16 @@ const typeList = ['网络问题']
 const contactTypeList = ['socket', 'mail', 'image', 'other']
 
 apiRouter.post('/addTicket', async (ctx, _) => {
-  const { mail } = ctx.state.user
+  const { mail, type: userType } = ctx.state.user
   const { toID, type, title, content, contactType } = ctx.request.body
+
+  if (userType === 1) {
+    ctx.body = {
+      msg: 'permission denied: only user can add ticket',
+      state: -1
+    }
+    return
+  }
 
   if (!typeList.includes(type) || !contactTypeList.includes(contactType)) {
     ctx.body = {

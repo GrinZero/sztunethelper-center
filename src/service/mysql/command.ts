@@ -90,6 +90,14 @@ class Command implements CommandInterface {
     this.commands.push(command)
     return this
   }
+  update(data: DBData) {
+    const keys = Object.keys(data)
+    const values = Object.values(data)
+    const command = `UPDATE \`${this.table}\` SET ${keys.map((k) => `\`${k}\` = ?`).join(',')}`
+    this.values.push(...values)
+    this.commands.push(command)
+    return this
+  }
   where(props: WhereProps) {
     const getWhereCommand = (obj: WhereProps, table?: string): string[] => {
       return Object.keys(obj).map((k) => {

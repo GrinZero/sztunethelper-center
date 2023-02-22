@@ -5,7 +5,7 @@ import { TicketContentTypeList } from '#/routes/api/ticket/constants'
 const send = (socket: SocketInstance, users: any) => {
   socket.on('send', async (roomID, msg, callback) => {
     const id = `ticket-${roomID}`
-    const { mail } = users
+    const { mail, type } = users
 
     // TODO：用redis优化
     const command = new Command('ticket')
@@ -35,6 +35,19 @@ const send = (socket: SocketInstance, users: any) => {
       })
       return
     }
+
+    const isUser = type === 0
+    const updateCommand = new Command('ticket')
+      .update({
+        updateTime: Date.now(),
+        read: isUser ? 0b10 : 0b01
+      })
+      .where({
+        id: roomID,
+        ...(isUser ? { from: mail } : { to: mail })
+      })
+      .done()
+    await control(updateCommand)
 
     const stamp = Date.now()
     const insertData = {
