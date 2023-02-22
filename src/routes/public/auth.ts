@@ -20,14 +20,20 @@ publicRouter.post('/auth', async (ctx, _) => {
     return false
   }
 
-  const { results: haveNameResult } = await control(`select id from user where mail = '${mail}'`)
+  const { results: haveNameResult } = await control(
+    `select id,type from user where mail = '${mail}'`
+  )
   const haveUser = haveNameResult.length === 1
   const verifyResult = await verfiy()
 
   if (verifyResult && haveUser) {
-    const token = sign({ mail, id: haveNameResult[0].id }, JwtConfig.secret, {
-      expiresIn: '120d'
-    })
+    const token = sign(
+      { mail, id: haveNameResult[0].id, type: haveNameResult[0].type },
+      JwtConfig.secret,
+      {
+        expiresIn: '120d'
+      }
+    )
     await control(`update user set updateTime = '${new Date().getTime()}' where mail = '${mail}'`)
     ctx.body = { token }
     return
@@ -38,9 +44,13 @@ publicRouter.post('/auth', async (ctx, _) => {
       `insert into user (username,mail,nickName,createTime,updateTime) values ('${mail}','${mail}','${mail}',${Date.now()},${Date.now()})`
     )
     if (registerResult.affectedRows === 1) {
-      const token = sign({ mail, id: haveNameResult[0].id }, JwtConfig.secret, {
-        expiresIn: '120d'
-      })
+      const token = sign(
+        { mail, id: haveNameResult[0].id, type: haveNameResult[0].type },
+        JwtConfig.secret,
+        {
+          expiresIn: '120d'
+        }
+      )
       ctx.body = { token }
       return
     } else {

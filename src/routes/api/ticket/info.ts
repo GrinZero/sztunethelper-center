@@ -3,28 +3,47 @@ import { TicketContentTypeList } from './constants'
 
 import { control, Command, condition } from '#service/mysql'
 
+const ContactTypeList = ['socket', 'mail', 'image', 'other']
 apiRouter.post('/fetchTicketList', async (ctx, _) => {
-  const { mail } = ctx.state.user
+  const { mail, type } = ctx.state.user
   const { page } = ctx.request.body
   const pageSize = 10
   const offset = page * pageSize
+
+  const isUser = type === 0
 
   // 0: open 1: close 2: delete
   const command = new Command()
     .select({
       ticket: {
-        '*': 1
+        '*': 1,
+        ...(isUser
+          ? {
+              to: 'other'
+            }
+          : {
+              from: 'other'
+            })
       },
       user: {
         username: 'adminName'
       }
     })
     .where({
-      from: mail,
-      status: condition('!=', 2),
-      ticket: {
-        to: '`user`.`mail`'
-      }
+      ...(isUser
+        ? {
+            from: mail,
+            ticket: {
+              to: '`user`.`mail`'
+            }
+          }
+        : {
+            to: mail,
+            ticket: {
+              from: '`user`.`mail`'
+            }
+          }),
+      status: condition('!=', 2)
     })
     .orderBy({ createTime: -1 })
     .limit(pageSize)
@@ -32,19 +51,23 @@ apiRouter.post('/fetchTicketList', async (ctx, _) => {
     .done()
 
   const { results: list } = await control(command)
+  const reador = isUser ? 0b10 : 0b01
   ctx.body = list.map((item: any) => {
     return {
       ...item,
-      read: (item.read & 0b10) === 0b10
+      read: (item.read & reador) === reador,
+      contactType: ContactTypeList[item.contactType]
     }
   })
 })
 
 apiRouter.post('/fetchTicketInfos', async (ctx, _) => {
-  const { mail } = ctx.state.user
+  const { mail, type } = ctx.state.user
   const { page, id } = ctx.request.body
   const pageSize = 20
   const offset = page * pageSize
+
+  const isUser = type === 0
 
   const { results: isTicketExist } = await control(
     new Command()
@@ -55,7 +78,7 @@ apiRouter.post('/fetchTicketInfos', async (ctx, _) => {
       })
       .where({
         id,
-        from: mail,
+        ...(isUser ? { from: mail } : { to: mail }),
         status: condition('!=', 2)
       })
       .add(`AND (\`to\`='${mail}' OR \`from\`='${mail}')`)

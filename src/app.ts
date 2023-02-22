@@ -48,6 +48,9 @@ app.use(
   })
 )
 
+import adminVerify from './core/middleware/adminVerify'
+app.use(adminVerify)
+
 app.use(publicRouter.routes()).use(publicRouter.allowedMethods())
 app.use(apiRouter.routes()).use(apiRouter.allowedMethods())
 
