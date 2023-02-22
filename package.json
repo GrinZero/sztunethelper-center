@@ -22,6 +22,7 @@
     "koa-router": "^12.0.0",
     "moment": "^2.29.4",
     "mysql": "^2.18.1",
+    "qiniu": "^7.8.0",
     "socket.io": "^4.6.0",
     "tencentcloud-sdk-nodejs": "^4.0.526",
     "tsconfig-paths": "^4.1.2"

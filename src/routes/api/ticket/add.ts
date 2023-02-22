@@ -67,7 +67,8 @@ apiRouter.post('/addTicket', async (ctx, _) => {
       content,
       createTime: stamp,
       updateTime: stamp,
-      type: 0
+      type: 0,
+      sender: mail
     })
     .done()
 

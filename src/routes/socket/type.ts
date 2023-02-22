@@ -5,6 +5,11 @@ export interface SocketData {
   data: any
 }
 
+export interface SocketMessage {
+  msg: string
+  data?: any
+  status: 'ok' | 'error'
+}
 export interface ServerTicket {
   id: number
   ticketID: string | number
@@ -18,7 +23,7 @@ export interface ServerTicket {
 export interface ServerToClientEvents {
   dispatch: (data: SocketData) => void
   onmessage: (data: SocketData) => void
-  send: (data: ServerTicket, callback?: (msg: string) => void) => void
+  send: (data: ServerTicket, callback?: (msg: SocketMessage) => void) => void
 }
 
 export interface TicketMessage {
@@ -34,7 +39,7 @@ export interface SocketMessage {
   status: 'ok' | 'error'
 }
 export interface ClientToServerEvents {
-  join: (roomID: string | number, callback?: (msg: string) => void) => void
+  join: (roomID: string | number, callback?: (msg: SocketMessage) => void) => void
   send: (
     roomID: string | number,
     data: TicketMessage,

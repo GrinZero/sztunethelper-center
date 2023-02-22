@@ -14,6 +14,7 @@ interface Duty {
   desc: string
   contact: string
   rate: number | null
+  mail: string
   contactType: 'socket' | 'mail' | 'image' | 'other'
 }
 
@@ -37,11 +38,12 @@ publicRouter
     const currentDuty: Duty = {
       id: 2,
       name: '源心锁',
-      avatarUrl: 'https://img.atobo.com/ProductImg/EWM/UWeb/1/9/4/0/0447/19400447/1.gif',
+      avatarUrl: 'https://cos.sztulives.cn/nethelper/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1v2.png',
       desc: '我是源心锁，2019级大数据学院学生',
       contact: 'Phone: 17603095310',
       rate: 4.5,
-      contactType: 'mail'
+      contactType: 'mail',
+      mail: 'bugyaluwang@qq.com'
     }
     ctx.body = {
       data: currentDuty,

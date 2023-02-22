@@ -1,5 +1,6 @@
 import { SocketInstance } from './type'
 import { control, Command } from '#/service/mysql'
+import { getUploadToken } from '#/service/cos'
 
 const join = (socket: SocketInstance, users: any) => {
   socket.on('join', async (roomID, callback) => {
@@ -26,7 +27,13 @@ const join = (socket: SocketInstance, users: any) => {
     }
 
     socket.join(id)
-    callback?.('ok')
+    callback?.({
+      status: 'ok',
+      data: {
+        uploadToken: getUploadToken()
+      },
+      msg: 'join success'
+    })
   })
 }
 
