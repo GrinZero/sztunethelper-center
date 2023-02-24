@@ -1,4 +1,5 @@
 import publicRouter from '../index'
+import { control, Command, condition } from '#/service/mysql'
 
 interface Banner {
   id: number
@@ -18,36 +19,74 @@ interface Duty {
   contactType: 'socket' | 'mail' | 'image' | 'other'
 }
 
-publicRouter
-  .get('/getBanner', async (ctx, _) => {
-    const banners: Banner[] = [
-      {
+publicRouter.get('/getBaseData', async (ctx, _) => {
+  const currentDate = new Date()
+  const curDay = currentDate.getDay()
+  const curStamp = currentDate.getTime()
+  const oneMonth = 30 * 24 * 60 * 60 * 1000
+
+  const avgRateCommand = `(
+    select avg(rate) from ticket
+    where ticket.to = user.mail and ticket.status >= 1
+    and ticket.rate > 0 and ticket.createTime > ${curStamp - oneMonth}
+  )`
+  const dutyCommand = new Command()
+    .select({
+      duty: {
+        contact: 1,
+        contactType: 1
+      },
+      user: {
         id: 1,
-        title: '我校首次推进宿舍网络认证客户端，点击查看',
-        url: 'https://www.baidu.com',
-        img: 'https://img1.baidu.com/it/u=1830000000,1830000000&fm=26&fmt=auto&gp=0.jpg'
+        avatar: 'avatarUrl',
+        mail: 1,
+        introduce: 'desc',
+        username: 'name'
+      },
+      [avgRateCommand]: 'rate'
+    })
+    .where({
+      duty: {
+        onDutyTime: curDay,
+        userID: '`user`.`id`'
       }
-    ]
-    ctx.body = {
-      data: banners,
-      code: 200,
-      msg: 'success'
+    })
+    .done()
+
+  const bannerCommand = new Command()
+    .select({
+      banner: {
+        '*': 1
+      }
+    })
+    .where({
+      overdueTime: condition('<', curStamp)
+    })
+    .done()
+
+  const noticeCommand = new Command()
+    .select({
+      notice: {
+        '*': 1
+      }
+    })
+    .where({
+      overdueTime: condition('<', curStamp)
+    })
+    .done()
+
+  const [duty, banner, notice] = await Promise.all([
+    control(dutyCommand),
+    control(bannerCommand),
+    control(noticeCommand)
+  ])
+
+  ctx.body = {
+    code: 0,
+    data: {
+      duty: (duty.results[0] as Duty) ?? null,
+      banner: banner.results as Banner[],
+      notice: notice.results[0] ?? null
     }
-  })
-  .get('/getDuty', async (ctx, _) => {
-    const currentDuty: Duty = {
-      id: 2,
-      name: '源心锁',
-      avatarUrl: 'https://cos.sztulives.cn/nethelper/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1v2.png',
-      desc: '我是源心锁，2019级大数据学院学生',
-      contact: 'Phone: 17603095310',
-      rate: 4.5,
-      contactType: 'mail',
-      mail: 'bugyaluwang@qq.com'
-    }
-    ctx.body = {
-      data: currentDuty,
-      code: 200,
-      msg: 'success'
-    }
-  })
+  }
+})

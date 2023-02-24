@@ -71,13 +71,23 @@ class Command implements CommandInterface {
       const tableKey = Object.keys(props)
       const selectCommand = tableKey.map((table) => {
         const selectObj = props![table]
-        return getSelectCommand(selectObj as SelectObj, table)
+        if (typeof selectObj === 'string' || selectObj === 1) {
+          return `${table} as \`${selectObj}\``
+        }
+        return getSelectCommand(selectObj, table)
       })
       this.commands.push(
-        `SELECT ${selectCommand.join(',')} FROM ${tableKey.map((t) => `\`${t}\``).join(',')}`
+        `SELECT ${selectCommand.join(',')} FROM ${tableKey
+          .map((t) => {
+            if (props![t] === 1 || typeof props![t] === 'string') {
+              return null
+            }
+            return `\`${t}\``
+          })
+          .filter(Boolean)
+          .join(',')}`
       )
     }
-
     return this
   }
   insert(data: DBData) {
@@ -118,6 +128,11 @@ class Command implements CommandInterface {
     }
 
     this.commands.push(`WHERE ${getWhereCommand(props).join(' AND ')}`)
+    return this
+  }
+  groupBy(props: string[]) {
+    const command = props.map((p) => `${p}`).join(',')
+    this.commands.push(`GROUP BY ${command}`)
     return this
   }
   orderBy(props: Record<string, 1 | -1>) {

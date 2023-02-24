@@ -2,3 +2,6 @@ DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `mail_verify_code`;
 DROP TABLE IF EXISTS `ticket`;
 DROP TABLE IF EXISTS `ticket_content`;
+DROP TABLE IF EXISTS `duty`;
+DROP TABLE IF EXISTS `banner`;
+DROP TABLE IF EXISTS `notice`;

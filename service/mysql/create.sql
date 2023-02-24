@@ -40,7 +40,7 @@ CREATE TABLE `nethelper`.`ticket` (
   `type` VARCHAR(45) NOT NULL, 
   `title` VARCHAR(45) NOT NULL,
   `status` INT NOT NULL DEFAULT 0, -- 0: open 1: close 2: delete
-  `rate` INT NULL DEFAULT -1, -- -1,0~100
+  `rate` INT NULL DEFAULT -1, -- -1,0~5
   `read` INT(1) NOT NULL DEFAULT 0,
   `contactType` INT NULL DEFAULT 0, -- 0: socket 1: mail 2: image 3: other
   `createTime` BIGINT(20) NULL DEFAULT 1597618819100,
@@ -70,6 +70,48 @@ CREATE TABLE `nethelper`.`ticket_content` (
 
 
 -- ----------------------------
+-- Table structure for duty
+-- ----------------------------
+CREATE TABLE `nethelper`.`duty` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `userID` INT NOT NULL,
+  `contact` VARCHAR(45) NULL,
+  `contactType` ENUM('socket', 'mail', 'image', 'other') NOT NULL DEFAULT 'socket',
+  `onDutyTime` INT NULL,
+  `createTime` BIGINT NOT NULL,
+  `updateTime` BIGINT NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE
+);
+
+-- ----------------------------
+-- Table structure for banner
+-- ----------------------------
+CREATE TABLE `nethelper`.`banner` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(45) NULL,
+  `url` VARCHAR(45) NULL,
+  `img` VARCHAR(45) NOT NULL,
+  `createTime` BIGINT NOT NULL,
+  `updateTime` BIGINT NOT NULL,
+  `overdueTime` BIGINT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE
+);
+
+CREATE TABLE `nethelper`.`notice` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `content` TEXT NOT NULL,
+  `title` VARCHAR(45) NULL,
+  `createTime` BIGINT NOT NULL,
+  `updateTime` BIGINT NOT NULL,
+  `overdueTime` BIGINT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE);
+
+
+
+-- ----------------------------
 -- Records of base
 -- ----------------------------
 BEGIN;
@@ -78,17 +120,21 @@ INSERT INTO `nethelper`.`user` VALUES (2, 1, '源心锁','774933704@qq.com','774
 
 INSERT INTO `nethelper`.`ticket` VALUES (1, 'bugyaluwang@qq.com', '774933704@qq.com','网络问题','网络总是断联1', 0, -1,0,   0,1675082983269, 1675082983269); 
 INSERT INTO `nethelper`.`ticket` VALUES (2, 'bugyaluwang@qq.com', '774933704@qq.com','网络问题','网络总是断联2', 2, -1,1,   3,1575082983269, 1675082983269); 
-INSERT INTO `nethelper`.`ticket` VALUES (3, 'bugyaluwang@qq.com', '774933704@qq.com','网络问题','网络总是断联3', 0, -1,2,   0,1675082983269, 1675082983269); 
-INSERT INTO `nethelper`.`ticket` VALUES (4, 'bugyaluwang@qq.com', '774933704@qq.com','网络问题','网络总是断联4', 0, -1,3,   0,1675082983269, 1675082983269); 
-INSERT INTO `nethelper`.`ticket` VALUES (5, 'bugyaluwang@qq.com', '774933704@qq.com','网络问题','网络总是断联5', 0, -1,0,   1,1675082983269, 1675082983269); 
-INSERT INTO `nethelper`.`ticket` VALUES (6, 'bugyaluwang@qq.com', '774933704@qq.com','网络问题','网络总是断联6', 1, -1,0,   1,1675082983269, 1675082983269); 
-INSERT INTO `nethelper`.`ticket` VALUES (7, 'bugyaluwang@qq.com', '774933704@qq.com','网络问题','网络总是断联7', 0, -1,0,   1,1675082983269, 1675082983269); 
-INSERT INTO `nethelper`.`ticket` VALUES (8, 'bugyaluwang@qq.com', '774933704@qq.com','网络问题','网络总是断联8', 0, -1,0,   1,1675082983269, 1675082983269); 
-INSERT INTO `nethelper`.`ticket` VALUES (9, 'bugyaluwang@qq.com', '774933704@qq.com','网络问题','网络总是断联9', 0, -1,0,   2,1675082983269, 1675082983269); 
-INSERT INTO `nethelper`.`ticket` VALUES (10, 'bugyaluwang@qq.com', '774933704@qq.com','网络问题','网络总是断联10', 0, -1,0, 2,1675082983269, 1675082983269); 
-INSERT INTO `nethelper`.`ticket` VALUES (11, 'bugyaluwang@qq.com', '774933704@qq.com','网络问题','网络总是断联11', 0, -1,0, 2,1675082983269, 1675082983269); 
-INSERT INTO `nethelper`.`ticket` VALUES (12, 'bugyaluwang@qq.com', '774933704@qq.com','网络问题','网络总是断联12', 2, -1,1, 3,1675082983269, 1675082983269); 
-INSERT INTO `nethelper`.`ticket` VALUES (13, 'bugyaluwang@qq.com', '774933704@qq.com','网络问题','网络总是断联13', 0, -1,2, 3,1675082983269, 1675082983269); 
+
+
+INSERT INTO `nethelper`.`duty` VALUES (1, 2, 'vx:bugyaluwang', 'socket', 0, 1675082983269, 1675082983269);
+INSERT INTO `nethelper`.`duty` VALUES (2, 2, 'vx:bugyaluwang', 'socket', 1, 1675082983269, 1675082983269);
+INSERT INTO `nethelper`.`duty` VALUES (3, 2, 'vx:bugyaluwang', 'socket', 2, 1675082983269, 1675082983269);
+INSERT INTO `nethelper`.`duty` VALUES (4, 2, 'vx:bugyaluwang', 'socket', 3, 1675082983269, 1675082983269);
+INSERT INTO `nethelper`.`duty` VALUES (5, 2, 'vx:bugyaluwang', 'socket', 4, 1675082983269, 1675082983269);
+INSERT INTO `nethelper`.`duty` VALUES (6, 2, 'vx:bugyaluwang', 'socket', 5, 1675082983269, 1675082983269);
+INSERT INTO `nethelper`.`duty` VALUES (7, 2, 'vx:bugyaluwang', 'socket', 6, 1675082983269, 1675082983269);
+
+INSERT INTO `nethelper`.`banner` VALUES (1, 'banner1', 'https://www.baidu.com', 'https://www.baidu.com/img/bd_logo1.png', 1675082983269, 1675082983269, 1675082983269);
+INSERT INTO `nethelper`.`banner` VALUES (2, 'banner2', 'https://www.baidu.com', 'https://www.baidu.com/img/bd_logo1.png', 1675082983269, 1675082983269, 1675082983269);
+
+INSERT INTO `nethelper`.`notice` VALUES (1, 'notice1', 'notice1', 1675082983269, 1675082983269, 1675082983269);
+
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
