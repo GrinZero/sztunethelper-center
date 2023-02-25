@@ -63,4 +63,26 @@ acme.sh --install-cert -d sztulives.cn -d *.sztulives.cn \
 --fullchain-file /etc/ssl/certs/sztulives.cn.pem
 ```
 
-## 1.2
+## 1.2 build docker image
+
+### 1.2.1 .env
+
+在根目录创建并写入.env 文件
+
+### 1.2.2 build
+
+```bash
+npm run docker:build
+```
+
+## 1.3 start
+
+```bash
+npm run docker:start
+```
+
+## 1.4 初始化 MySQL
+
+```bash
+docker
+```
