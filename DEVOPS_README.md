@@ -78,6 +78,11 @@ npm run docker:build
 ## 1.3 start
 
 ```bash
+sudo yum -y install epel-release
+sudo yum -y install python3-pip
+pip3 install -U pip setuptools
+pip3 install docker-compose
+docker-compose -version
 npm run docker:start
 ```
 
