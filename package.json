@@ -5,15 +5,18 @@
   "main": "index.js",
   "scripts": {
     "test": "vitest",
-    "start": "tsc && NODE_ENV=production node ./lib/index.js",
+    "start": "ts-node --files ./src/index.ts",
     "dev": "nodemon --exec NODE_OPTIONS=--inspect NODE_ENV=development ts-node --files ./src/index.ts",
     "docker:start": "sh ./service/start.sh",
     "docker:build": "sh ./service/build.sh",
+    "docker:clear": "sh ./service/clear.sh",
+    "ipconfig": "docker network inspect nethelper-network",
     "prepare": "husky install"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "jsonwebtoken": "^9.0.0",
     "koa": "^2.14.1",
     "koa-body": "^6.0.1",

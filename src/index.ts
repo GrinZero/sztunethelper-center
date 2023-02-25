@@ -1,4 +1,6 @@
 process.env.TZ = 'Asia/Shanghai'
+import dotenv from 'dotenv'
+dotenv.config()
 
 import { app, httpServer } from './app'
 import os from 'os'

@@ -1,3 +1,3 @@
 export default class JwtConfig {
-  public static readonly secret = "mock-sercet";
+  public static readonly secret = process.env.JWT_SECRET as string
 }

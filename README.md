@@ -89,5 +89,6 @@ mysql -h 127.0.0.1 -u root -p
 
 ```bash
 mysql -h 127.0.0.1 -u root -p
-ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456'
+ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
+FLUSH PRIVILEGES;
 ```
