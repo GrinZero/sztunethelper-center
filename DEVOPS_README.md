@@ -89,5 +89,14 @@ npm run docker:start
 ## 1.4 初始化 MySQL
 
 ```bash
-docker
+docker exec -it nethelper_mysql /bin/bash
+mysql -h 127.0.0.1 -u root -p
 ```
+
+然后输入以下SQL语句修改安全等级
+```sql
+ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'xxxxxx';
+FLUSH PRIVILEGES;
+```
+
+运行create.sql
