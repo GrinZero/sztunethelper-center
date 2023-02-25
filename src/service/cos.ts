@@ -1,7 +1,7 @@
-import { uploadOptions, uploadAccessKey, uploadSerectKey } from '#/env.prod'
+import { uploadOptions, uploadAccessKey, uploadSecretKey } from '#/env.prod'
 import qiniu from 'qiniu'
 
-const mac = new qiniu.auth.digest.Mac(uploadAccessKey, uploadSerectKey)
+const mac = new qiniu.auth.digest.Mac(uploadAccessKey, uploadSecretKey)
 
 const M = 1024 * 1024
 const min = 60
