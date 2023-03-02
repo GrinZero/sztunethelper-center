@@ -5,24 +5,27 @@ import { control } from '#service/mysql'
 import client from '#service/mail'
 import { sign } from 'jsonwebtoken'
 
+import { escape } from 'mysql'
+
 publicRouter.post('/auth', async (ctx, _) => {
-  const { mail, code } = ctx.request.body
+  const { mail: _mail, code: _code } = ctx.request.body
+  const mail = escape(_mail)
+  const code = escape(_code)
+  console.log(mail, code)
   const verfiy = async () => {
     // 5min有效
-    const { results } = await control(
-      `select mail from mail_verify_code where mail = '${mail}' and code = '${code}' and updateTime > ${
-        Date.now() - 5 * 60 * 1000
-      }`
-    )
+    const command = `select mail from mail_verify_code where mail = ${mail} and code = ${code} and updateTime > ${
+      Date.now() - 5 * 60 * 1000
+    }`
+    console.log(command)
+    const { results } = await control(command)
     if (results.length === 1) {
       return true
     }
     return false
   }
 
-  const { results: haveNameResult } = await control(
-    `select id,type from user where mail = '${mail}'`
-  )
+  const { results: haveNameResult } = await control(`select id,type from user where mail = ${mail}`)
   const haveUser = haveNameResult.length === 1
   const verifyResult = await verfiy()
 
@@ -34,14 +37,14 @@ publicRouter.post('/auth', async (ctx, _) => {
         expiresIn: '120d'
       }
     )
-    await control(`update user set updateTime = '${new Date().getTime()}' where mail = '${mail}'`)
+    await control(`update user set updateTime = '${new Date().getTime()}' where mail = ${mail}`)
     ctx.body = { token }
     return
   }
 
   if (verifyResult && !haveUser) {
     const { results: registerResult } = await control(
-      `insert into user (username,mail,nickName,createTime,updateTime) values ('${mail}','${mail}','${mail}',${Date.now()},${Date.now()})`
+      `insert into user (username,mail,nickName,createTime,updateTime) values (${mail},${mail},${mail},${Date.now()},${Date.now()})`
     )
     if (registerResult.affectedRows === 1) {
       const token = sign(
@@ -68,7 +71,8 @@ publicRouter.post('/auth', async (ctx, _) => {
 })
 
 publicRouter.post('/sendVerifyCode', async (ctx, _) => {
-  const { mail } = ctx.request.body
+  const { mail: _mail } = ctx.request.body
+  const mail = escape(_mail)
   let code = Math.floor(Math.random() * 100000)
   if (code < 100000) {
     code += 100000
@@ -90,12 +94,12 @@ publicRouter.post('/sendVerifyCode', async (ctx, _) => {
   }
 
   let { results } = await control(
-    `select updateTime,count from mail_verify_code where mail = '${mail}'`
+    `select updateTime,count from mail_verify_code where mail = ${mail}`
   )
 
   if (results.length === 0) {
     await control(
-      `insert into mail_verify_code (mail,code,createTime,updateTime) values ('${mail}','${code}',${Date.now()},${Date.now()})`
+      `insert into mail_verify_code (mail,code,createTime,updateTime) values (${mail},'${code}',${Date.now()},${Date.now()})`
     )
     await sendVerifyCodeMail()
     ctx.body = {
@@ -109,7 +113,7 @@ publicRouter.post('/sendVerifyCode', async (ctx, _) => {
     const oneDay = 24 * 60 * 60 * 1000
     if (Date.now() - updateTime > oneDay) {
       await control(
-        `update mail_verify_code set code = '${code}',updateTime = ${Date.now()},count = 3 where mail = '${mail}'`
+        `update mail_verify_code set code = '${code}',updateTime = ${Date.now()},count = 3 where mail = ${mail}`
       )
       await sendVerifyCodeMail()
       ctx.body = {
@@ -123,7 +127,7 @@ publicRouter.post('/sendVerifyCode', async (ctx, _) => {
 
   results = (
     await control(
-      `select updateTime,count from mail_verify_code where mail = '${mail}' and count > 0`
+      `select updateTime,count from mail_verify_code where mail = ${mail} and count > 0`
     )
   ).results
 
@@ -136,7 +140,7 @@ publicRouter.post('/sendVerifyCode', async (ctx, _) => {
   }
 
   await control(
-    `update mail_verify_code set code = '${code}',updateTime = ${Date.now()},count = count - 1 where mail = '${mail}'`
+    `update mail_verify_code set code = '${code}',updateTime = ${Date.now()},count = count - 1 where mail = ${mail}`
   )
   await sendVerifyCodeMail()
 

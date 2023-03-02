@@ -1,3 +1,5 @@
+import { escape } from 'mysql'
+
 export interface CommandInterface {
   table: string | null
   commands: Array<string>
@@ -170,7 +172,7 @@ class Command implements CommandInterface {
     return this.commands.join(' ').replaceAll('?', () => {
       index++
       if (typeof values[index] === 'string') {
-        return `'${values[index]}'`
+        return escape(values[index])
       }
       if (typeof values[index] === 'object') {
         return `${values[index].toString()}`

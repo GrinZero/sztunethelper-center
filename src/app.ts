@@ -9,9 +9,9 @@ import { createServer } from 'http'
 import { Server } from 'socket.io'
 
 const app = new Koa()
-app.use(helmet())
 
 //HTTP
+// 错误拦截中间件
 app.use(async (ctx, next) => {
   try {
     await next()
@@ -21,7 +21,10 @@ app.use(async (ctx, next) => {
     ctx.app.emit('error', err, ctx)
   }
 })
+app.use(helmet())
+// POST body解析中间件
 app.use(koaBody())
+// 跨域中间价
 app.use(async (ctx, next) => {
   ctx.set('Access-Control-Allow-Origin', '*')
   ctx.set(
@@ -35,10 +38,6 @@ app.use(async (ctx, next) => {
     await next()
   }
 })
-
-import { publicRouter } from './routes/public'
-import { apiRouter } from './routes/api'
-
 app.use(
   jwt({
     secret: JwtConfig.secret,
@@ -51,6 +50,8 @@ app.use(
 import adminVerify from './core/middleware/adminVerify'
 app.use(adminVerify)
 
+import { publicRouter } from './routes/public'
+import { apiRouter } from './routes/api'
 app.use(publicRouter.routes()).use(publicRouter.allowedMethods())
 app.use(apiRouter.routes()).use(apiRouter.allowedMethods())
 
