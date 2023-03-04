@@ -1,7 +1,7 @@
 import Koa from 'koa'
 import { control, Command } from '#/service/mysql'
 
-const adminVeirfy = async (
+const adminVerify = async (
   ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext, any>,
   next: Koa.Next
 ) => {
@@ -30,4 +30,4 @@ const adminVeirfy = async (
   await next()
 }
 
-export default adminVeirfy
+export default adminVerify

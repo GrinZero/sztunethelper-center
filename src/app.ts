@@ -8,36 +8,30 @@ import { JwtConfig } from './config'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 
+import { errorCatch, adminVerify, accessControl } from './core/middleware'
+import { publicRouter } from './routes/public'
+import { apiRouter } from './routes/api'
+import { join, send } from './routes'
+
+import type {
+  ServerToClientEvents,
+  ClientToServerEvents,
+  InterServerEvents,
+  SocketData,
+  UserState
+} from '#routes/index'
+
 const app = new Koa()
 
-//HTTP
 // 错误拦截中间件
-app.use(async (ctx, next) => {
-  try {
-    await next()
-  } catch (err: any) {
-    ctx.status = err?.status || 500
-    ctx.body = err?.message
-    ctx.app.emit('error', err, ctx)
-  }
-})
+app.use(errorCatch)
+// 安全中间件
 app.use(helmet())
 // POST body解析中间件
 app.use(koaBody())
-// 跨域中间价
-app.use(async (ctx, next) => {
-  ctx.set('Access-Control-Allow-Origin', '*')
-  ctx.set(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Content-Length, Authorization, Accept, X-Requested-With'
-  )
-  ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
-  if (ctx.method == 'OPTIONS') {
-    ctx.body = 200
-  } else {
-    await next()
-  }
-})
+// 跨域中间件
+app.use(accessControl)
+// JWT中间件
 app.use(
   jwt({
     secret: JwtConfig.secret,
@@ -46,34 +40,21 @@ app.use(
     path: [/^\/public/]
   })
 )
-
-import adminVerify from './core/middleware/adminVerify'
+// 管理员权限验证中间件
 app.use(adminVerify)
-
-import { publicRouter } from './routes/public'
-import { apiRouter } from './routes/api'
 app.use(publicRouter.routes()).use(publicRouter.allowedMethods())
 app.use(apiRouter.routes()).use(apiRouter.allowedMethods())
+const socketServer = createServer(app.callback())
 
 //SOCKET
-import type {
-  ServerToClientEvents,
-  ClientToServerEvents,
-  InterServerEvents,
-  SocketData,
-  UserState
-} from '#routes/index'
-const httpServer = createServer(app.callback())
 const io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(
-  httpServer,
+  socketServer,
   {
     cors: {
       origin: '*'
     }
   }
 )
-
-import { join, send } from './routes'
 io.on('connection', (socket) => {
   let user: null | UserState = null
   try {
@@ -102,5 +83,4 @@ io.on('connection', (socket) => {
     console.info('user disconnected', socket.id)
   })
 })
-
-export { app, httpServer }
+export { app, socketServer }

@@ -1,6 +1,6 @@
 process.env.TZ = 'Asia/Shanghai'
 
-import { app, httpServer } from './app'
+import { app, socketServer } from './app'
 import os from 'os'
 
 function getNetworkIp() {
@@ -32,6 +32,6 @@ app.listen(3000, () => {
   console.log('需认证的接口已经启动，http://localhost:3000/api/')
 })
 
-httpServer.listen(3001, () => {
+socketServer.listen(3001, () => {
   console.log('socket已经启动，http://localhost:3001')
 })
