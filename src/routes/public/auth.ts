@@ -31,7 +31,7 @@ publicRouter.post('/auth', async (ctx, _) => {
 
   if (verifyResult && haveUser) {
     const token = sign(
-      { mail, id: haveNameResult[0].id, type: haveNameResult[0].type },
+      { mail:_mail, id: haveNameResult[0].id, type: haveNameResult[0].type },
       JwtConfig.secret,
       {
         expiresIn: '120d'
@@ -48,7 +48,7 @@ publicRouter.post('/auth', async (ctx, _) => {
     )
     if (registerResult.affectedRows === 1) {
       const token = sign(
-        { mail, id: haveNameResult[0].id, type: haveNameResult[0].type },
+        { mail:_mail, id: haveNameResult[0].id, type: haveNameResult[0].type },
         JwtConfig.secret,
         {
           expiresIn: '120d'
