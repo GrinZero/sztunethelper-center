@@ -1,10 +1,10 @@
-import { mysqlSecret } from '../env.prod'
+import { mysqlSecret, mysqlUser, mysqlPort, mysqlHost } from '../env.prod'
 
 const MYSQL = {
   DB_NAME: 'nethelper',
-  HOST: '127.0.0.1',
-  PORT: 3306,
-  USER_NAME: 'root',
+  HOST: mysqlHost,
+  PORT: mysqlPort,
+  USER_NAME: mysqlUser,
   PASSWORD: mysqlSecret,
   CONNECTION_LIMIT: 60 * 60 * 1000,
   CONNECT_TIMEOUT: 1000 * 60 * 60,

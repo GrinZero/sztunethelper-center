@@ -1,5 +1,4 @@
 import moment from 'moment'
-import Config from '#config/Config'
 
 /**
  * 格式化时间
@@ -7,6 +6,6 @@ import Config from '#config/Config'
  * @param pattern
  * @returns
  */
-export function format(date: Date, pattern = Config.DEFAULT_DATE_FORMAT) {
+export function format(date: Date, pattern = 'YYYY-MM-DD HH:mm:ss') {
   return moment(date).format(pattern)
 }

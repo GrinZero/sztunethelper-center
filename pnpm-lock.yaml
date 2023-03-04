@@ -11,6 +11,7 @@ specifiers:
   '@typescript-eslint/parser': ^5.0.0
   bufferutil: ^4.0.7
   commitlint: ^17.4.2
+  dotenv: ^16.0.3
   eslint: ^8.32.0
   eslint-config-prettier: ^8.6.0
   eslint-plugin-prettier: ^4.2.1
@@ -37,6 +38,7 @@ specifiers:
   vitest: ^0.28.5
 
 dependencies:
+  dotenv: 16.0.3
   jsonwebtoken: 9.0.0
   koa: 2.14.1
   koa-body: 6.0.1
@@ -1604,6 +1606,11 @@ packages:
     dependencies:
       is-obj: 2.0.0
     dev: true
+
+  /dotenv/16.0.3:
+    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+    engines: {node: '>=12'}
+    dev: false
 
   /eastasianwidth/0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
