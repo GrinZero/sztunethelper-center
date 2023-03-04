@@ -80,7 +80,7 @@ publicRouter.post('/sendVerifyCode', async (ctx, _) => {
   const sendVerifyCodeMail = async () => {
     return await client.SendEmail({
       FromEmailAddress: 'sztulives.source@mail.sztulives.cn',
-      Destination: [mail],
+      Destination: [_mail],
       Subject: 'sztunethelper 验证码',
       Template: {
         TemplateID: 65687,
