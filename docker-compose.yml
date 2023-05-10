@@ -43,7 +43,7 @@ services:
       - /etc/ssl/certs:/etc/ssl/certs
       - /etc/ssl/private:/etc/ssl/private
   koa:
-    image: sztunethelper:0.0.1
+    image: sztunethelper:0.0.2
     container_name: nethelper_koa
     networks:
       nethelper-network:
