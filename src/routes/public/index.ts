@@ -7,3 +7,4 @@ export default router
 
 import './auth'
 import './baseData'
+import './file'

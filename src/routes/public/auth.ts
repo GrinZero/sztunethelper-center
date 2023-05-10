@@ -11,7 +11,7 @@ publicRouter.post('/auth', async (ctx, _) => {
   const { mail: _mail, code: _code } = ctx.request.body
   const mail = escape(_mail)
   const code = escape(_code)
-  console.log(mail, code)
+
   const verfiy = async () => {
     // 5min有效
     const command = `select mail from mail_verify_code where mail = ${mail} and code = ${code} and updateTime > ${

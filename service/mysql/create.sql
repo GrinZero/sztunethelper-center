@@ -63,6 +63,7 @@ CREATE TABLE `nethelper`.`ticket_content` (
   `status` INT NULL DEFAULT 0,
   `createTime` BIGINT(20) NULL DEFAULT 1597618819100,
   `updateTime` BIGINT(20) NULL DEFAULT 1597618819100,
+  `uploadID` VARCHAR(45) NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `ticketID` (`ticketID` ASC) VISIBLE

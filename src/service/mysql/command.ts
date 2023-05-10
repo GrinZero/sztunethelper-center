@@ -1,13 +1,5 @@
 import { escape } from 'mysql'
-
-export interface CommandInterface {
-  table: string | null
-  commands: Array<string>
-  insert(data: DBData): CommandInterface
-  where(props: DBData): CommandInterface
-  done(source?: boolean): string
-}
-export type DBData = Record<string, string | number>
+import { control } from './index'
 
 type ConditionOperator =
   | '='
@@ -31,6 +23,23 @@ type WhereProps = Record<string, WhereObj | string | number | Condition>
 type Source = {
   str: string | number
   toString(): string
+}
+
+export type DBData = Record<string, string | number>
+export interface CommandInterface {
+  table: string | null
+  commands: Array<string>
+  insert(data: DBData): CommandInterface
+  where(props: WhereProps): CommandInterface
+  select(props?: SelectProps): CommandInterface
+  update(props: DBData): CommandInterface
+  groupBy(props: string[]): CommandInterface
+  orderBy(props: Record<string, 1 | -1>): CommandInterface
+  limit(props: number): CommandInterface
+  offset(props: number): CommandInterface
+  add(command: string): CommandInterface
+  done(): string
+  query(): ReturnType<typeof control>
 }
 
 export const condition = (operator: ConditionOperator, value: string | number) =>
@@ -179,6 +188,10 @@ class Command implements CommandInterface {
       }
       return `${values[index]}`
     })
+  }
+
+  query() {
+    return control(this.done())
   }
 }
 
